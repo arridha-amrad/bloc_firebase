@@ -20,4 +20,28 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
     throw AuthException(message: "Something went wrong");
   }
+
+  @override
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
+
+  @override
+  Future<UserCredential> login(String email, String password) async {
+    try {
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        throw AuthException(message: "User not found");
+      }
+      if (e.code == "wrong-password") {
+        throw AuthException(message: "Invalid email and password");
+      }
+    } catch (e) {
+      rethrow;
+    }
+    throw AuthException(message: "Something went wrong");
+  }
 }

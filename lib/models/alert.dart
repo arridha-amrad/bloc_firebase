@@ -18,5 +18,5 @@ class Alert extends Equatable {
   });
 
   @override
-  List<Object> get props => [message, type];
+  List<Object?> get props => [message, type];
 }
