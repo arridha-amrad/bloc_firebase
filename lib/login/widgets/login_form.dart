@@ -1,4 +1,5 @@
 import 'package:bloc_firebase/login/bloc/login_bloc.dart';
+import 'package:bloc_firebase/signup/signup_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,9 +30,30 @@ class LoginForm extends StatelessWidget {
           SizedBox(height: 12),
           _PasswordInput(),
           SizedBox(height: 12),
-          _LoginButton()
+          _LoginButton(),
+          SizedBox(height: 12),
+          RegisterLinkButton()
         ],
       ),
+    );
+  }
+}
+
+class RegisterLinkButton extends StatelessWidget {
+  const RegisterLinkButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: TextButton(
+          onPressed: () {
+            Navigator.of(context)
+                .pushAndRemoveUntil(SignUpView.route(), (route) => false);
+          },
+          child: const Text("Register")),
     );
   }
 }

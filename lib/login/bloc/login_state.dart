@@ -9,11 +9,12 @@ class LoginState extends Equatable {
   final FormzStatus status;
   final Alert alert;
 
-  const LoginState(
-      {this.email = const Email.pure(),
-      this.password = const Password.pure(),
-      this.status = FormzStatus.pure,
-      this.alert = const Alert.empty()});
+  const LoginState({
+    this.email = const Email.pure(),
+    this.password = const Password.pure(),
+    this.status = FormzStatus.pure,
+    this.alert = const Alert.empty(),
+  });
 
   LoginState copyWith(
       {Email? email, Password? password, FormzStatus? status, Alert? alert}) {

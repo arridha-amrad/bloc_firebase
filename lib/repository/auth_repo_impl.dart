@@ -44,4 +44,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
     throw AuthException(message: "Something went wrong");
   }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw AuthException(
+          message: "Failed to get current user after registration complete");
+    }
+    await user.sendEmailVerification();
+  }
 }

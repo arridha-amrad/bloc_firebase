@@ -3,7 +3,6 @@ import 'package:bloc_firebase/home/bloc/home_bloc.dart';
 import 'package:bloc_firebase/home/home_view.dart';
 import 'package:bloc_firebase/login/login_view.dart';
 import 'package:bloc_firebase/repository/auth_repo_impl.dart';
-import 'package:bloc_firebase/signup/bloc/signup_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +27,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => SignupBloc(authenticationRepository),
-        ),
         BlocProvider(
           create: (context) => HomeBloc(authenticationRepository),
         ),

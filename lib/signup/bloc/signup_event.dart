@@ -24,3 +24,7 @@ class PasswordChanged extends SignupEvent {
 class SignUpSubmitted extends SignupEvent {
   const SignUpSubmitted();
 }
+
+class ResetField extends SignupEvent {
+  const ResetField();
+}

@@ -1,57 +1,93 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_firebase/abstracts/authentication_repository.dart';
+import 'package:bloc_firebase/abstracts/user_repository.dart';
 import 'package:bloc_firebase/exceptions/auth_exception.dart';
 import 'package:bloc_firebase/models/alert.dart';
+import 'package:bloc_firebase/models/email.dart';
+import 'package:bloc_firebase/models/password.dart';
+import 'package:bloc_firebase/models/user_store.dart';
+import 'package:bloc_firebase/models/username.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:formz/formz.dart';
 
 part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final AuthenticationRepository _authenticationRepository;
+  final UserRepository _userRepository;
 
-  SignupBloc(AuthenticationRepository authenticationRepository)
+  SignupBloc(AuthenticationRepository authenticationRepository,
+      UserRepository userRepository)
       : _authenticationRepository = authenticationRepository,
+        _userRepository = userRepository,
         super(const SignupState()) {
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<SignUpSubmitted>(_onSubmit);
+    on<ResetField>(_onResetField);
+  }
+
+  void _onResetField(ResetField event, Emitter<SignupState> emit) {
+    emit(state.copyWith(
+      email: const Email.pure(),
+      username: const Username.pure(),
+      password: const Password.pure(),
+      status: FormzStatus.pure,
+      alert: const Alert.empty(),
+    ));
   }
 
   void _onEmailChanged(EmailChanged event, Emitter<SignupState> emit) {
-    final String email = event.email;
-    final emailRegexp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (emailRegexp.hasMatch(email)) {
-      emit(state.copyWith(email: email, isEmailValid: true));
-    } else {
-      emit(state.copyWith(email: email, isEmailValid: false));
-    }
+    final email = Email.dirty(event.email);
+    emit(state.copyWith(
+      email: email,
+      status: Formz.validate([email, state.password]),
+    ));
   }
 
   void _onPasswordChanged(PasswordChanged event, Emitter<SignupState> emit) {
-    final String password = event.password;
-    // Minimum six characters, at least one letter, one number and one special character:
-    final passwordRegexp = RegExp(
-        r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$");
-    if (passwordRegexp.hasMatch(password)) {
-      emit(state.copyWith(password: event.password, isPasswordValid: true));
-    } else {
-      emit(state.copyWith(password: password, isPasswordValid: false));
-    }
+    final password = Password.dirty(event.password);
+    emit(state.copyWith(
+      password: password,
+      status: Formz.validate([password, state.email]),
+    ));
   }
 
   Future<void> _onSubmit(
       SignUpSubmitted event, Emitter<SignupState> emit) async {
-    try {
-      final UserCredential userCredential =
-          await _authenticationRepository.signup(state.email, state.password);
-      print("============ user : $userCredential");
-    } on AuthException catch (e) {
-      emit(state.copyWith(
-          alert: Alert(message: e.message, type: AlertType.error)));
-    } catch (e) {
-      rethrow;
+    if (state.status.isValidated) {
+      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+      try {
+        final UserCredential userCredential =
+            await _authenticationRepository.signup(
+          state.email.value,
+          state.password.value,
+        );
+        final user = userCredential.user;
+        if (user == null) {
+          throw AuthException(message: "Failed get the user");
+        }
+        await _userRepository.save(
+          UserStore(
+            user.uid,
+            state.username.value,
+            user.email!,
+            DateTime.now(),
+            DateTime.now(),
+          ),
+        );
+        await _authenticationRepository.sendEmailVerification();
+        await _authenticationRepository.logout();
+        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      } on AuthException catch (e) {
+        emit(state.copyWith(
+            status: FormzStatus.submissionFailure,
+            alert: Alert(message: e.message, type: AlertType.error)));
+      } catch (e) {
+        rethrow;
+      }
     }
   }
 }

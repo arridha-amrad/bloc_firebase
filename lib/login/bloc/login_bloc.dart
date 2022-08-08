@@ -1,15 +1,11 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:bloc_firebase/abstracts/authentication_repository.dart';
 import 'package:bloc_firebase/exceptions/auth_exception.dart';
-import 'package:bloc_firebase/login/models/password.dart';
 import 'package:bloc_firebase/models/alert.dart';
+import 'package:bloc_firebase/models/email.dart';
+import 'package:bloc_firebase/models/password.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
-
-import '../models/email.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -23,11 +19,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmit);
-    on<LoginAlertCleared>(_onClear);
-  }
-
-  void _onClear(LoginAlertCleared event, Emitter<LoginState> emit) {
-    // emit(state.copyWith(status: Status.idle));
   }
 
   Future<void> _onSubmit(LoginSubmitted event, Emitter<LoginState> emit) async {
