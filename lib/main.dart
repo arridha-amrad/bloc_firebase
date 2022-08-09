@@ -1,7 +1,7 @@
 import 'package:bloc_firebase/abstracts/authentication_repository.dart';
-import 'package:bloc_firebase/home/bloc/home_bloc.dart';
-import 'package:bloc_firebase/home/home_view.dart';
-import 'package:bloc_firebase/login/login_view.dart';
+import 'package:bloc_firebase/presentations/home/bloc/home_bloc.dart';
+import 'package:bloc_firebase/presentations/home/home_view.dart';
+import 'package:bloc_firebase/presentations/login/login_view.dart';
 import 'package:bloc_firebase/repository/auth_repo_impl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

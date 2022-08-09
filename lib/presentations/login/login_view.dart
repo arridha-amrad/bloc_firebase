@@ -1,8 +1,9 @@
-import 'package:bloc_firebase/login/bloc/login_bloc.dart';
-import 'package:bloc_firebase/login/widgets/login_form.dart';
 import 'package:bloc_firebase/repository/auth_repo_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/login_bloc.dart';
+import 'widgets/login_form.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);

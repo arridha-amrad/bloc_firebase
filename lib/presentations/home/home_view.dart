@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/home/widgets/logout.dart';
+import 'package:bloc_firebase/presentations/todos/todo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +21,12 @@ class HomeView extends StatelessWidget {
                   },
                   icon: const Icon(Icons.logout))
             ],
+          ),
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () => Navigator.of(context).push(TodoView.route()),
+              child: const Text("Todo"),
+            ),
           ),
         );
       },

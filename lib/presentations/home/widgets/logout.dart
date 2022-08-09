@@ -1,7 +1,8 @@
-import 'package:bloc_firebase/home/bloc/home_bloc.dart';
-import 'package:bloc_firebase/login/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../login/login_view.dart';
+import '../bloc/home_bloc.dart';
 
 class HomeLogout extends StatelessWidget {
   const HomeLogout({Key? key}) : super(key: key);

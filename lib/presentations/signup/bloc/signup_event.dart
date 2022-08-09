@@ -7,6 +7,13 @@ abstract class SignupEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class UsernameChanged extends SignupEvent {
+  final String username;
+  const UsernameChanged(this.username);
+  @override
+  List<Object> get props => [username];
+}
+
 class EmailChanged extends SignupEvent {
   final String email;
   const EmailChanged(this.email);

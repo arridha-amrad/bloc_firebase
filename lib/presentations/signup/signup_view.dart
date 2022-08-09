@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/login/login_view.dart';
+import 'package:bloc_firebase/presentations/login/login_view.dart';
 import 'package:bloc_firebase/repository/auth_repo_impl.dart';
 import 'package:bloc_firebase/repository/user_repository_impl.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +21,7 @@ class SignUpView extends StatelessWidget {
         ),
         body: BlocProvider(
             create: (context) => SignupBloc(
-                  AuthenticationRepositoryImpl(),
-                  UserRepositoryImpl(),
-                ),
+                AuthenticationRepositoryImpl(), UserRepositoryImpl()),
             child: BlocListener<SignupBloc, SignupState>(
               listener: (context, state) {
                 if (state.status.isSubmissionFailure) {
@@ -36,28 +34,7 @@ class SignUpView extends StatelessWidget {
                     );
                 }
                 if (state.status.isSubmissionSuccess) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text(
-                          "Verification Required",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        content: const Text("Please verify your email"),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                context
-                                    .read<SignupBloc>()
-                                    .add(const ResetField());
-                              },
-                              child: const Text("Ok"))
-                        ],
-                      );
-                    },
-                  );
+                  _signUpCompleteDialog(context);
                 }
               },
               child: Stack(
@@ -83,6 +60,30 @@ class SignUpView extends StatelessWidget {
                 ],
               ),
             )));
+  }
+
+  _signUpCompleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Verification Required",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: const Text("Please verify your email"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.of(context)
+                      .pushAndRemoveUntil(LoginView.route(), (route) => false);
+                },
+                child: const Text("Ok"))
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -118,10 +119,11 @@ class _UsernameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignupBloc, SignupState>(
-      buildWhen: (previous, current) => previous.email != current.email,
+      buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
         return TextFormField(
-          onChanged: (val) => context.read<SignupBloc>().add(EmailChanged(val)),
+          onChanged: (val) =>
+              context.read<SignupBloc>().add(UsernameChanged(val)),
           decoration: const InputDecoration(
               border: OutlineInputBorder(), labelText: "Username"),
         );

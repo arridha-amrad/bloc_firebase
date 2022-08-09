@@ -24,12 +24,14 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         _userRepository = userRepository,
         super(const SignupState()) {
     on<EmailChanged>(_onEmailChanged);
+    on<UsernameChanged>(_onUsernameChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<SignUpSubmitted>(_onSubmit);
     on<ResetField>(_onResetField);
   }
 
   void _onResetField(ResetField event, Emitter<SignupState> emit) {
+    print("field reset");
     emit(state.copyWith(
       email: const Email.pure(),
       username: const Username.pure(),
@@ -39,11 +41,19 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     ));
   }
 
+  void _onUsernameChanged(UsernameChanged event, Emitter<SignupState> emit) {
+    final username = Username.dirty(event.username);
+    emit(state.copyWith(
+      username: username,
+      status: Formz.validate([username, state.email, state.password]),
+    ));
+  }
+
   void _onEmailChanged(EmailChanged event, Emitter<SignupState> emit) {
     final email = Email.dirty(event.email);
     emit(state.copyWith(
       email: email,
-      status: Formz.validate([email, state.password]),
+      status: Formz.validate([email, state.username, state.password]),
     ));
   }
 
@@ -51,7 +61,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     final password = Password.dirty(event.password);
     emit(state.copyWith(
       password: password,
-      status: Formz.validate([password, state.email]),
+      status: Formz.validate([password, state.username, state.email]),
     ));
   }
 
