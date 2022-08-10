@@ -5,14 +5,14 @@ class TodoState extends Equatable {
   final Description description;
   final FormzStatus status;
   final Alert alert;
-  final int due;
+  final Due due;
 
   const TodoState({
     this.title = const Title.pure(),
     this.description = const Description.pure(),
     this.status = FormzStatus.pure,
     this.alert = const Alert.empty(),
-    this.due = 0,
+    this.due = const Due.pure(),
   });
 
   TodoState copyWith({
@@ -20,7 +20,7 @@ class TodoState extends Equatable {
     Description? description,
     FormzStatus? status,
     Alert? alert,
-    int? due,
+    Due? due,
   }) {
     return TodoState(
       description: description ?? this.description,

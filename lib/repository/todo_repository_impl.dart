@@ -24,4 +24,14 @@ class TodoRepositoryImpl extends TodoRepository {
   Future<void> update(Todo todo) async {
     await _todoStore.doc(todo.id).update(todo.toMap());
   }
+
+  @override
+  Stream<List<Todo>> getAllTodos() async* {
+    yield* _todoStore
+        .orderBy("createdAt", descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Todo.fromSnapshot(doc)).toList();
+    });
+  }
 }

@@ -1,26 +1,40 @@
 import 'package:bloc_firebase/presentations/todos/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:formz/formz.dart';
 
-class TodoInputDue extends StatelessWidget {
+class TodoInputDue extends StatefulWidget {
   const TodoInputDue({Key? key}) : super(key: key);
 
   @override
+  State<TodoInputDue> createState() => _TodoInputDueState();
+}
+
+class _TodoInputDueState extends State<TodoInputDue> {
+  TextEditingController dueController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TodoBloc, TodoState>(
-      buildWhen: (previous, current) => previous.due != current.due,
-      builder: (context, state) {
-        return TextFormField(
-          onTap: () => _pickDueTime(context),
-          onChanged: (val) =>
-              context.read<TodoBloc>().add(TodoEventDueChanged(int.parse(val))),
-          readOnly: true,
-          decoration: const InputDecoration(
-              suffixIcon: Icon(Icons.calendar_month),
-              border: OutlineInputBorder(),
-              labelText: "Due time"),
-        );
+    return BlocListener<TodoBloc, TodoState>(
+      listener: (context, state) {
+        if (state.status.isSubmissionSuccess) {
+          dueController.clear();
+        }
       },
+      child: BlocBuilder<TodoBloc, TodoState>(
+        buildWhen: (previous, current) => previous.due != current.due,
+        builder: (context, state) {
+          return TextFormField(
+            onTap: () => _pickDueTime(context),
+            controller: dueController,
+            readOnly: true,
+            decoration: const InputDecoration(
+                suffixIcon: Icon(Icons.calendar_month),
+                border: OutlineInputBorder(),
+                labelText: "Due time"),
+          );
+        },
+      ),
     );
   }
 
@@ -39,11 +53,16 @@ class TodoInputDue extends StatelessWidget {
             if (time == null) {
               return null;
             }
-            final dateMilliSeconds = date.millisecondsSinceEpoch;
-            final timeOfDayMilliSeconds =
-                time.hour * 3600 * 1000 + time.minute * 60 * 1000;
-            context.read<TodoBloc>().add(
-                TodoEventDueChanged(dateMilliSeconds + timeOfDayMilliSeconds));
+            final timeInMilliSeconds = date.millisecondsSinceEpoch +
+                (time.hour * 3600 * 1000 + time.minute * 60 * 1000);
+            final formattedDate = DateFormat.yMMMd().format(
+                DateTime.fromMillisecondsSinceEpoch(timeInMilliSeconds));
+            final formattedTime = DateFormat.jm().format(
+                DateTime.fromMillisecondsSinceEpoch(timeInMilliSeconds));
+            dueController.text = "$formattedTime / $formattedDate";
+            context
+                .read<TodoBloc>()
+                .add(TodoEventDueChanged(timeInMilliSeconds));
           }));
   }
 }

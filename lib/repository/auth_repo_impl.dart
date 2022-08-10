@@ -54,4 +54,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     }
     await user.sendEmailVerification();
   }
+
+  @override
+  User? getAuthUser() {
+    final user = _auth.currentUser;
+    return user;
+  }
 }

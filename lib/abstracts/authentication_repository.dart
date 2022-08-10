@@ -5,4 +5,5 @@ abstract class AuthenticationRepository {
   Future<void> logout();
   Future<UserCredential> login(String email, String password);
   Future<void> sendEmailVerification();
+  User? getAuthUser();
 }

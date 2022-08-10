@@ -20,39 +20,30 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  final AuthenticationRepository authenticationRepository =
-      AuthenticationRepositoryImpl();
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => HomeBloc(authenticationRepository),
-        ),
-      ],
-      child: MaterialApp(
-        theme: ThemeData(
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ButtonStyle(elevation: MaterialStateProperty.all(0))),
-          appBarTheme: const AppBarTheme(elevation: 0),
-        ),
-        home: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                  body: Center(
-                child: CircularProgressIndicator(),
-              ));
-            }
-            final user = snapshot.data;
-            if (user == null) {
-              return const LoginView();
-            }
-            return const HomeView();
-          },
-        ),
+    return MaterialApp(
+      theme: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(elevation: MaterialStateProperty.all(0))),
+        appBarTheme: const AppBarTheme(elevation: 0),
+      ),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+                body: Center(
+              child: CircularProgressIndicator(),
+            ));
+          }
+          final user = snapshot.data;
+          if (user == null) {
+            return const LoginView();
+          }
+          return const HomeView();
+        },
       ),
     );
   }
