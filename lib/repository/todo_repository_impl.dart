@@ -17,7 +17,7 @@ class TodoRepositoryImpl extends TodoRepository {
 
   @override
   Future<void> save(Todo todo) async {
-    await _todoStore.add(todo.toMap());
+    await _todoStore.doc(todo.id).set(todo.toMap());
   }
 
   @override

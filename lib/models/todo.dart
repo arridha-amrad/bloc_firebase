@@ -6,7 +6,7 @@ class Todo extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDone;
-  final String due;
+  final int due;
   final String id;
 
   const Todo({
@@ -38,7 +38,7 @@ class Todo extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isDone,
-    String? due,
+    int? due,
     String? id,
   }) {
     return Todo(
@@ -72,7 +72,7 @@ class Todo extends Equatable {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int),
       isDone: map['isDone'] as bool,
-      due: map['due'] as String,
+      due: map['due'] as int,
     );
   }
 }

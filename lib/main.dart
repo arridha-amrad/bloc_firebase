@@ -32,7 +32,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        theme: ThemeData(appBarTheme: const AppBarTheme(elevation: 0)),
+        theme: ThemeData(
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(elevation: MaterialStateProperty.all(0))),
+          appBarTheme: const AppBarTheme(elevation: 0),
+        ),
         home: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
