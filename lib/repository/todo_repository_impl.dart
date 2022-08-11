@@ -17,12 +17,20 @@ class TodoRepositoryImpl extends TodoRepository {
 
   @override
   Future<void> save(Todo todo) async {
-    await _todoStore.doc(todo.id).set(todo.toMap());
+    try {
+      await _todoStore.doc(todo.id).set(todo.toMap());
+    } catch (e) {
+      throw const TodoException("Failed to store todo");
+    }
   }
 
   @override
   Future<void> update(Todo todo) async {
-    await _todoStore.doc(todo.id).update(todo.toMap());
+    try {
+      await _todoStore.doc(todo.id).update(todo.toMap());
+    } catch (e) {
+      throw const TodoException("Failed to update the todo");
+    }
   }
 
   @override

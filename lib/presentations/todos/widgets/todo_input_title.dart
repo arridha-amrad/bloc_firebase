@@ -11,6 +11,7 @@ class TodoInputTitle extends StatelessWidget {
       buildWhen: (previous, current) => previous.title != current.title,
       builder: (context, state) {
         return TextFormField(
+          initialValue: state.title.value,
           onChanged: (value) =>
               context.read<TodoBloc>().add(TodoEventTitleChanged(value)),
           decoration: const InputDecoration(

@@ -12,11 +12,13 @@ class TodoInputDescription extends StatelessWidget {
           previous.description != current.description,
       builder: (context, state) {
         return TextFormField(
+          maxLines: 5,
+          initialValue: state.description.value,
           onChanged: (val) =>
               context.read<TodoBloc>().add(TodoEventDescriptionChanged(val)),
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            labelText: "Decsription",
+            labelText: "Description",
           ),
         );
       },

@@ -7,6 +7,31 @@ abstract class TodoEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class TodoEventLoadTodos extends TodoEvent {
+  const TodoEventLoadTodos();
+}
+
+class TodoEventChangeIsDone extends TodoEvent {
+  final bool isDone;
+  const TodoEventChangeIsDone(this.isDone);
+  @override
+  List<Object> get props => [isDone];
+}
+
+class TodoEventSetTodos extends TodoEvent {
+  final List<Todo> todos;
+  const TodoEventSetTodos(this.todos);
+  @override
+  List<Object> get props => [todos];
+}
+
+class TodoEventSelectTodo extends TodoEvent {
+  final Todo todo;
+  const TodoEventSelectTodo(this.todo);
+  @override
+  List<Object> get props => [todo];
+}
+
 class TodoEventTitleChanged extends TodoEvent {
   final String title;
   const TodoEventTitleChanged(this.title);
@@ -30,4 +55,8 @@ class TodoEventDueChanged extends TodoEvent {
 
 class TodoEventAddNewTodo extends TodoEvent {
   const TodoEventAddNewTodo();
+}
+
+class TodoEventUpdateTodo extends TodoEvent {
+  const TodoEventUpdateTodo();
 }

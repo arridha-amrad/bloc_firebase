@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_firebase/abstracts/authentication_repository.dart';
@@ -20,16 +20,57 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final TodoRepository _todoRepository;
   final AuthenticationRepository _authenticationRepository;
 
-  TodoBloc(
-    TodoRepository todoRepository,
-    AuthenticationRepository authenticationRepository,
-  )   : _todoRepository = todoRepository,
+  TodoBloc({
+    required TodoRepository todoRepository,
+    required AuthenticationRepository authenticationRepository,
+  })  : _todoRepository = todoRepository,
         _authenticationRepository = authenticationRepository,
         super(const TodoState()) {
     on<TodoEventTitleChanged>(_onTitleChanged);
     on<TodoEventDueChanged>(_onDueChanged);
     on<TodoEventDescriptionChanged>(_onDescriptionChanged);
     on<TodoEventAddNewTodo>(_onAddTodo);
+    on<TodoEventLoadTodos>(_onLoadTodos);
+    on<TodoEventChangeIsDone>(_onChangeIsDone);
+    on<TodoEventSetTodos>(_onSetTodos);
+    on<TodoEventSelectTodo>(_onSelectTodo);
+    on<TodoEventUpdateTodo>(_onUpdateTodo);
+  }
+
+  Future<void> _onUpdateTodo(
+      TodoEventUpdateTodo event, Emitter<TodoState> emit) async {
+    if (state.status.isValidated) {
+      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+      try {} catch (e) {
+        rethrow;
+      }
+    }
+  }
+
+  void _onChangeIsDone(TodoEventChangeIsDone event, Emitter<TodoState> emit) {
+    emit(state.copyWith(isDone: event.isDone));
+  }
+
+  void _onLoadTodos(TodoEventLoadTodos event, Emitter<TodoState> emit) {
+    emit(state.copyWith(isFetching: true));
+    _todoRepository
+        .getAllTodos()
+        .listen((todos) => add(TodoEventSetTodos(todos)));
+  }
+
+  void _onSetTodos(TodoEventSetTodos event, Emitter<TodoState> emit) {
+    emit(state.copyWith(todos: event.todos, isFetching: false));
+  }
+
+  void _onSelectTodo(TodoEventSelectTodo event, Emitter<TodoState> emit) {
+    final Todo todo = event.todo;
+    emit(state.copyWith(
+      title: Title.dirty(todo.title),
+      description: Description.dirty(todo.description),
+      isDone: todo.isDone,
+      due: Due.dirty(todo.due),
+      status: FormzStatus.valid,
+    ));
   }
 
   void _onDueChanged(TodoEventDueChanged event, Emitter<TodoState> emit) {
@@ -77,7 +118,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         emit(state.copyWith(
             status: FormzStatus.submissionSuccess,
             alert: const Alert(
-                message: "New todo created sucessfully",
+                message: "New todo created successfully",
                 type: AlertType.success)));
       } on TodoException catch (e) {
         emit(state.copyWith(

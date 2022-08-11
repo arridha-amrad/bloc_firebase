@@ -1,12 +1,8 @@
-import 'package:bloc_firebase/abstracts/authentication_repository.dart';
-import 'package:bloc_firebase/presentations/home/bloc/home_bloc.dart';
 import 'package:bloc_firebase/presentations/home/home_view.dart';
 import 'package:bloc_firebase/presentations/login/login_view.dart';
-import 'package:bloc_firebase/repository/auth_repo_impl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'firebase_options.dart';
 
@@ -15,18 +11,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(elevation: MaterialStateProperty.all(0))),
+          style: ButtonStyle(elevation: MaterialStateProperty.all(0)),
+        ),
         appBarTheme: const AppBarTheme(elevation: 0),
       ),
       home: StreamBuilder<User?>(

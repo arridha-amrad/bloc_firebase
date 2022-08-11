@@ -4,7 +4,8 @@ import 'package:formz/formz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TodoAddButton extends StatelessWidget {
-  const TodoAddButton({Key? key}) : super(key: key);
+  final bool isUpdate;
+  const TodoAddButton({Key? key, required this.isUpdate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,11 +13,11 @@ class TodoAddButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return ElevatedButton(
-            onPressed: state.status.isValidated
-                ? () =>
-                    context.read<TodoBloc>().add(const TodoEventAddNewTodo())
-                : null,
-            child: const Text("Submit"));
+          onPressed: state.status.isValidated
+              ? () => context.read<TodoBloc>().add(const TodoEventAddNewTodo())
+              : null,
+          child: Text(isUpdate ? "Update" : "Submit"),
+        );
       },
     );
   }

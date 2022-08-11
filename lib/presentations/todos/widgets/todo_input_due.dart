@@ -24,6 +24,11 @@ class _TodoInputDueState extends State<TodoInputDue> {
       child: BlocBuilder<TodoBloc, TodoState>(
         buildWhen: (previous, current) => previous.due != current.due,
         builder: (context, state) {
+          if (state.due.value != 0) {
+            final formattedDate = _dateFormatter(state.due.value);
+            final formattedTime = _timeFormatter(state.due.value);
+            dueController.text = "$formattedTime / $formattedDate";
+          }
           return TextFormField(
             onTap: () => _pickDueTime(context),
             controller: dueController,
@@ -36,6 +41,16 @@ class _TodoInputDueState extends State<TodoInputDue> {
         },
       ),
     );
+  }
+
+  _dateFormatter(int milliseconds) {
+    return DateFormat.yMMMd()
+        .format(DateTime.fromMillisecondsSinceEpoch(milliseconds));
+  }
+
+  _timeFormatter(int milliseconds) {
+    return DateFormat.jm()
+        .format(DateTime.fromMillisecondsSinceEpoch(milliseconds));
   }
 
   _pickDueTime(BuildContext context) {
@@ -55,10 +70,8 @@ class _TodoInputDueState extends State<TodoInputDue> {
             }
             final timeInMilliSeconds = date.millisecondsSinceEpoch +
                 (time.hour * 3600 * 1000 + time.minute * 60 * 1000);
-            final formattedDate = DateFormat.yMMMd().format(
-                DateTime.fromMillisecondsSinceEpoch(timeInMilliSeconds));
-            final formattedTime = DateFormat.jm().format(
-                DateTime.fromMillisecondsSinceEpoch(timeInMilliSeconds));
+            final formattedDate = _dateFormatter(timeInMilliSeconds);
+            final formattedTime = _timeFormatter(timeInMilliSeconds);
             dueController.text = "$formattedTime / $formattedDate";
             context
                 .read<TodoBloc>()

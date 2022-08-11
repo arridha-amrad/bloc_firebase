@@ -27,18 +27,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<UsernameChanged>(_onUsernameChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<SignUpSubmitted>(_onSubmit);
-    on<ResetField>(_onResetField);
-  }
-
-  void _onResetField(ResetField event, Emitter<SignupState> emit) {
-    print("field reset");
-    emit(state.copyWith(
-      email: const Email.pure(),
-      username: const Username.pure(),
-      password: const Password.pure(),
-      status: FormzStatus.pure,
-      alert: const Alert.empty(),
-    ));
   }
 
   void _onUsernameChanged(UsernameChanged event, Emitter<SignupState> emit) {
