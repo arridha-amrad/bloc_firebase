@@ -29,6 +29,7 @@ class TodoRepositoryImpl extends TodoRepository {
     try {
       await _todoStore.doc(todo.id).update(todo.toMap());
     } catch (e) {
+      print("==== update error : $e");
       throw const TodoException("Failed to update the todo");
     }
   }

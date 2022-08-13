@@ -22,18 +22,6 @@ class Todo extends Equatable {
     required this.due,
   });
 
-  Todo.empty({
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    this.id = "",
-    this.description = "",
-    this.due = 0,
-    this.isDone = false,
-    this.title = "",
-    this.userId = "",
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
-
   @override
   List<Object> get props {
     return [

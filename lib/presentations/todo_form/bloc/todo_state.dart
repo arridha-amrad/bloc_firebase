@@ -2,48 +2,51 @@ part of 'todo_bloc.dart';
 
 class TodoState extends Equatable {
   @override
-  List<Object> get props =>
-      [title, description, status, alert, due, todos, isFetching, isDone];
+  List<Object?> get props =>
+      [title, description, due, isDone, todos, status, message, todo];
 
+  final Todo? todo;
   final Title title;
   final Description description;
   final FormzStatus status;
-  final Alert alert;
+  final String message;
   final Due due;
   final List<Todo> todos;
-  final bool isFetching;
   final bool isDone;
 
   const TodoState({
     this.title = const Title.pure(),
     this.description = const Description.pure(),
     this.status = FormzStatus.pure,
-    this.alert = const Alert.empty(),
     this.due = const Due.pure(),
     this.todos = const <Todo>[],
-    this.isFetching = false,
+    this.message = "",
     this.isDone = false,
+    this.todo,
   });
 
   TodoState copyWith({
     Title? title,
     Description? description,
     FormzStatus? status,
-    Alert? alert,
+    String? message,
     Due? due,
     List<Todo>? todos,
     bool? isFetching,
     bool? isDone,
+    String? id,
+    String? userId,
+    Todo? todo,
   }) {
     return TodoState(
       description: description ?? this.description,
       title: title ?? this.title,
       status: status ?? this.status,
-      alert: alert ?? this.alert,
+      message: message ?? this.message,
       due: due ?? this.due,
       todos: todos ?? this.todos,
-      isFetching: isFetching ?? this.isFetching,
       isDone: isDone ?? this.isDone,
+      todo: todo ?? this.todo,
     );
   }
 }

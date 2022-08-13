@@ -1,4 +1,5 @@
-import 'package:bloc_firebase/presentations/todos/bloc/todo_bloc.dart';
+import 'package:bloc_firebase/models/todo.dart';
+import 'package:bloc_firebase/presentations/todo_form/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,7 @@ class _TodoInputDueState extends State<TodoInputDue> {
   TextEditingController dueController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final todo = ModalRoute.of(context)?.settings.arguments as Todo?;
     return BlocListener<TodoBloc, TodoState>(
       listener: (context, state) {
         if (state.status.isSubmissionSuccess) {
@@ -24,9 +26,9 @@ class _TodoInputDueState extends State<TodoInputDue> {
       child: BlocBuilder<TodoBloc, TodoState>(
         buildWhen: (previous, current) => previous.due != current.due,
         builder: (context, state) {
-          if (state.due.value != 0) {
-            final formattedDate = _dateFormatter(state.due.value);
-            final formattedTime = _timeFormatter(state.due.value);
+          if (todo != null) {
+            final formattedDate = _dateFormatter(todo.due);
+            final formattedTime = _timeFormatter(todo.due);
             dueController.text = "$formattedTime / $formattedDate";
           }
           return TextFormField(
@@ -73,9 +75,7 @@ class _TodoInputDueState extends State<TodoInputDue> {
             final formattedDate = _dateFormatter(timeInMilliSeconds);
             final formattedTime = _timeFormatter(timeInMilliSeconds);
             dueController.text = "$formattedTime / $formattedDate";
-            context
-                .read<TodoBloc>()
-                .add(TodoEventDueChanged(timeInMilliSeconds));
+            context.read<TodoBloc>().add(DueChanged(timeInMilliSeconds));
           }));
   }
 }

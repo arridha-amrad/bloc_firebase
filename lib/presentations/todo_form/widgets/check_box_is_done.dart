@@ -1,11 +1,9 @@
-import 'package:bloc_firebase/models/todo.dart';
-import 'package:bloc_firebase/presentations/todos/bloc/todo_bloc.dart';
+import 'package:bloc_firebase/presentations/todo_form/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CheckBoxIsDone extends StatelessWidget {
-  final Todo todo;
-  const CheckBoxIsDone({Key? key, required this.todo}) : super(key: key);
+  const CheckBoxIsDone({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class CheckBoxIsDone extends StatelessWidget {
             Switch(
               value: state.isDone,
               onChanged: (val) {
-                context.read<TodoBloc>().add(TodoEventChangeIsDone(val));
+                context.read<TodoBloc>().add(ChangeIsDone(val));
               },
             )
           ],

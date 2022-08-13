@@ -1,5 +1,6 @@
 import 'package:bloc_firebase/presentations/home/home_view.dart';
 import 'package:bloc_firebase/presentations/login/login_view.dart';
+import 'package:bloc_firebase/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: AppRoutes.all,
       theme: ThemeData(
+        floatingActionButtonTheme:
+            const FloatingActionButtonThemeData(elevation: 0),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(elevation: MaterialStateProperty.all(0)),
         ),
