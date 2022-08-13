@@ -8,3 +8,12 @@ abstract class HomeEvent extends Equatable {
 }
 
 class TodosLoaded extends HomeEvent {}
+
+class SetTodos extends HomeEvent {
+  final List<Todo> todos;
+  const SetTodos(this.todos);
+  @override
+  List<Object> get props => [todos];
+}
+
+class Logout extends HomeEvent {}

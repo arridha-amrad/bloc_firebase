@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/models/user_store.dart';
+import 'package:bloc_firebase/domain/models/user_store.dart';
 
 abstract class UserRepository {
   Future<void> save(UserStore userStore);

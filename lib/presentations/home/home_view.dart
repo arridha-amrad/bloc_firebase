@@ -1,5 +1,5 @@
+import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/presentations/home/widgets/todo_list.dart';
-import 'package:bloc_firebase/repository/todo_repository_impl.dart';
 import 'package:bloc_firebase/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,21 +12,33 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(
-        TodoRepositoryImpl(),
+      create: (_) => HomeBloc(
+        authenticationRepository: AuthenticationRepositoryImpl(),
+        todoRepository: TodoRepositoryImpl(),
       )..add(TodosLoaded()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Home View"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(Routes.todoForm.name);
-                },
-                icon: const Icon(Icons.add))
-          ],
-        ),
-        body: const TodoList(),
+      child: BlocBuilder<HomeBloc, HomeState>(
+        buildWhen: (previous, current) => previous.todos != current.todos,
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("Home View"),
+              centerTitle: true,
+              leading: IconButton(
+                  onPressed: () {
+                    context.read<HomeBloc>().add(Logout());
+                  },
+                  icon: const Icon(Icons.logout)),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(Routes.todoForm.name);
+                    },
+                    icon: const Icon(Icons.add))
+              ],
+            ),
+            body: const TodoList(),
+          );
+        },
       ),
     );
   }

@@ -1,19 +1,13 @@
-import 'package:bloc_firebase/models/todo.dart';
-import 'package:bloc_firebase/presentations/shared/snackbar_util.dart';
-import 'package:bloc_firebase/presentations/shared/widgets/off_screen_loading.dart';
+import 'package:bloc_firebase/domain/domain.dart';
+
 import 'package:bloc_firebase/presentations/todo_form/bloc/todo_bloc.dart';
-import 'package:bloc_firebase/presentations/todo_form/widgets/check_box_is_done.dart';
-import 'package:bloc_firebase/presentations/todo_form/widgets/todo_add_button.dart';
-import 'package:bloc_firebase/presentations/todo_form/widgets/todo_delete_button.dart';
-import 'package:bloc_firebase/presentations/todo_form/widgets/todo_input_description.dart';
-import 'package:bloc_firebase/presentations/todo_form/widgets/todo_input_due.dart';
-import 'package:bloc_firebase/presentations/todo_form/widgets/todo_input_title.dart';
-import 'package:bloc_firebase/repository/auth_repo_impl.dart';
-import 'package:bloc_firebase/repository/todo_repository_impl.dart';
+import 'package:bloc_firebase/presentations/todo_form/widgets/widgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+
+import '../shared/shared.dart';
 
 class TodoFormView extends StatelessWidget {
   const TodoFormView({Key? key}) : super(key: key);

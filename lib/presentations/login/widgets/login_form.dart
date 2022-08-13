@@ -15,11 +15,8 @@ class LoginForm extends StatelessWidget {
         if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                  content: Text(state.alert.message),
-                  backgroundColor: Colors.red),
-            );
+            ..showSnackBar(SnackBar(
+                content: Text(state.message), backgroundColor: Colors.red));
         }
       },
       child: ListView(

@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/repository/auth_repo_impl.dart';
+import 'package:bloc_firebase/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +19,9 @@ class LoginView extends StatelessWidget {
           title: const Text("Login"),
         ),
         body: BlocProvider(
-          create: (context) => LoginBloc(AuthenticationRepositoryImpl()),
+          create: (context) => LoginBloc(
+            AuthenticationRepositoryImpl(),
+          ),
           child: const LoginForm(),
         ));
   }

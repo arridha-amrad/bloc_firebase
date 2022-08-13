@@ -1,6 +1,6 @@
-import 'package:bloc_firebase/abstracts/todo_repository.dart';
+import 'package:bloc_firebase/domain/abstracts/abstracts.dart';
 import 'package:bloc_firebase/exceptions/todo_exception.dart';
-import 'package:bloc_firebase/models/todo.dart';
+import 'package:bloc_firebase/domain/models/todo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TodoRepositoryImpl extends TodoRepository {

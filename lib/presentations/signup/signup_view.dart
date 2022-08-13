@@ -1,6 +1,6 @@
+import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/presentations/login/login_view.dart';
-import 'package:bloc_firebase/repository/auth_repo_impl.dart';
-import 'package:bloc_firebase/repository/user_repository_impl.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -27,11 +27,9 @@ class SignUpView extends StatelessWidget {
                 if (state.status.isSubmissionFailure) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                          content: Text(state.alert.message),
-                          backgroundColor: Colors.red),
-                    );
+                    ..showSnackBar(SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red));
                 }
                 if (state.status.isSubmissionSuccess) {
                   _signUpCompleteDialog(context);

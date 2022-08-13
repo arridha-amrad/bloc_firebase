@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:bloc_firebase/abstracts/authentication_repository.dart';
-import 'package:bloc_firebase/abstracts/todo_repository.dart';
+import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/exceptions/todo_exception.dart';
-import 'package:bloc_firebase/models/todo.dart';
-import 'package:bloc_firebase/presentations/todo_form/models_validator/description.dart';
-import 'package:bloc_firebase/presentations/todo_form/models_validator/due.dart';
-import 'package:bloc_firebase/presentations/todo_form/models_validator/title.dart';
+import 'package:bloc_firebase/presentations/todo_form/models_validator/is_done.dart';
+import 'package:bloc_firebase/presentations/todo_form/models_validator/model_validator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:uuid/uuid.dart';
@@ -61,7 +58,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       Todo todo = state.todo!;
       final newTodo = todo.copyWith(
         updatedAt: DateTime.now(),
-        isDone: state.isDone,
+        isDone: state.isDone.value,
         description: state.description.value,
         title: state.title.value,
       );
@@ -78,7 +75,15 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   }
 
   void _onChangeIsDone(ChangeIsDone event, Emitter<TodoState> emit) {
-    emit(state.copyWith(isDone: event.isDone));
+    final isDone = IsDone.dirty(event.isDone);
+    emit(state.copyWith(
+        isDone: isDone,
+        status: Formz.validate([
+          isDone,
+          state.description,
+          state.title,
+          state.due,
+        ])));
   }
 
   Future<void> _onLoadTodos(LoadTodos event, Emitter<TodoState> emit) async {
@@ -102,8 +107,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         state.description,
         state.title,
         state.due,
+        state.isDone,
       ]),
-      isDone: todo.isDone,
+      isDone: IsDone.dirty(todo.isDone),
     ));
   }
 
@@ -111,14 +117,16 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     final due = Due.dirty(event.due);
     emit(state.copyWith(
         due: due,
-        status: Formz.validate([due, state.title, state.description])));
+        status: Formz.validate(
+            [due, state.title, state.description, state.isDone])));
   }
 
   void _onTitleChanged(TitleChanged event, Emitter<TodoState> emit) {
     final title = Title.dirty(event.title);
     emit(state.copyWith(
       title: title,
-      status: Formz.validate([title, state.description, state.due]),
+      status:
+          Formz.validate([title, state.description, state.due, state.isDone]),
     ));
   }
 
@@ -127,7 +135,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     final description = Description.dirty(event.description);
     emit(state.copyWith(
       description: description,
-      status: Formz.validate([description, state.description, state.due]),
+      status: Formz.validate(
+          [description, state.description, state.due, state.isDone]),
     ));
   }
 

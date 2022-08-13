@@ -1,12 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_firebase/abstracts/authentication_repository.dart';
-import 'package:bloc_firebase/abstracts/user_repository.dart';
+import 'package:bloc_firebase/domain/domain.dart';
+
 import 'package:bloc_firebase/exceptions/auth_exception.dart';
-import 'package:bloc_firebase/models/alert.dart';
-import 'package:bloc_firebase/models/email.dart';
-import 'package:bloc_firebase/models/password.dart';
-import 'package:bloc_firebase/models/user_store.dart';
-import 'package:bloc_firebase/models/username.dart';
+import 'package:bloc_firebase/presentations/shared/shared.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
@@ -58,11 +55,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     if (state.status.isValidated) {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       try {
-        final UserCredential userCredential =
-            await _authenticationRepository.signup(
-          state.email.value,
-          state.password.value,
-        );
+        final UserCredential userCredential = await _authenticationRepository
+            .signup(state.email.value, state.password.value);
         final user = userCredential.user;
         if (user == null) {
           throw AuthException(message: "Failed get the user");
@@ -81,8 +75,9 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } on AuthException catch (e) {
         emit(state.copyWith(
-            status: FormzStatus.submissionFailure,
-            alert: Alert(message: e.message, type: AlertType.error)));
+          status: FormzStatus.submissionFailure,
+          message: e.message,
+        ));
       } catch (e) {
         rethrow;
       }

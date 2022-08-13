@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/models/todo.dart';
+import 'package:bloc_firebase/domain/models/todo.dart';
 
 abstract class TodoRepository {
   Future<void> save(Todo todo);

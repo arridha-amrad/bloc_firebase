@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/models/todo.dart';
+import 'package:bloc_firebase/domain/models/todo.dart';
 import 'package:bloc_firebase/presentations/todo_form/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

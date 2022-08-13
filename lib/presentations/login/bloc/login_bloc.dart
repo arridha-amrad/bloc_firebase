@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_firebase/abstracts/authentication_repository.dart';
+import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/exceptions/auth_exception.dart';
-import 'package:bloc_firebase/models/alert.dart';
-import 'package:bloc_firebase/models/email.dart';
-import 'package:bloc_firebase/models/password.dart';
+import 'package:bloc_firebase/presentations/shared/shared.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 
@@ -32,8 +31,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } on AuthException catch (e) {
         emit(state.copyWith(
-            status: FormzStatus.submissionFailure,
-            alert: Alert(message: e.message, type: AlertType.error)));
+          status: FormzStatus.submissionFailure,
+          message: e.message,
+        ));
       } catch (e) {
         rethrow;
       }

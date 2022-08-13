@@ -1,4 +1,4 @@
-import 'package:bloc_firebase/abstracts/authentication_repository.dart';
+import 'package:bloc_firebase/domain/abstracts/abstracts.dart';
 import 'package:bloc_firebase/exceptions/auth_exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

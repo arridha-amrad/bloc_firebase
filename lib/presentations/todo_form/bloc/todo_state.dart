@@ -12,7 +12,7 @@ class TodoState extends Equatable {
   final String message;
   final Due due;
   final List<Todo> todos;
-  final bool isDone;
+  final IsDone isDone;
 
   const TodoState({
     this.title = const Title.pure(),
@@ -20,8 +20,8 @@ class TodoState extends Equatable {
     this.status = FormzStatus.pure,
     this.due = const Due.pure(),
     this.todos = const <Todo>[],
+    this.isDone = const IsDone.pure(),
     this.message = "",
-    this.isDone = false,
     this.todo,
   });
 
@@ -33,7 +33,7 @@ class TodoState extends Equatable {
     Due? due,
     List<Todo>? todos,
     bool? isFetching,
-    bool? isDone,
+    IsDone? isDone,
     String? id,
     String? userId,
     Todo? todo,

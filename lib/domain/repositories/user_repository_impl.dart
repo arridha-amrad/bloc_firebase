@@ -1,5 +1,5 @@
-import 'package:bloc_firebase/abstracts/user_repository.dart';
-import 'package:bloc_firebase/models/user_store.dart';
+import 'package:bloc_firebase/domain/abstracts/abstracts.dart';
+import 'package:bloc_firebase/domain/models/user_store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserRepositoryImpl extends UserRepository {

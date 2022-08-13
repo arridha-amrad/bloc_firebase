@@ -14,7 +14,7 @@ class CheckBoxIsDone extends StatelessWidget {
           children: [
             const Text("Is Complete"),
             Switch(
-              value: state.isDone,
+              value: state.isDone.value,
               onChanged: (val) {
                 context.read<TodoBloc>().add(ChangeIsDone(val));
               },
