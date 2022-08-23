@@ -24,17 +24,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _onSetTodos(SetTodos event, Emitter<HomeState> emit) {
-    emit(state.copyWith(
-      todos: event.todos,
-      isLoading: false,
-    ));
+    emit(state.copyWith(todos: event.todos, isLoading: false));
   }
 
   Future<void> _onTodosLoaded(
       TodosLoaded event, Emitter<HomeState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    _todoRepository.getAllTodos().listen((todos) => add(SetTodos(todos)));
-    // await emit.forEach<List<Todo>>(_todoRepository.getAllTodos(),
-    //     onData: (todos) => state.copyWith(todos: todos, isLoading: false));
+    await emit.forEach<List<Todo>>(
+      _todoRepository.getAllTodos(),
+      onData: (data) {
+        return state.copyWith(isLoading: false, todos: data);
+      },
+    );
   }
 }

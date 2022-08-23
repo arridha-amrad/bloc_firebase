@@ -59,7 +59,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
             .signup(state.email.value, state.password.value);
         final user = userCredential.user;
         if (user == null) {
-          throw AuthException(message: "Failed get the user");
+          throw const AuthException(message: "Failed get the user");
         }
         await _userRepository.save(
           UserStore(

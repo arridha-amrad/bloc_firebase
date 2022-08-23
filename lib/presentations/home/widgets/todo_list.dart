@@ -29,9 +29,11 @@ class TodoList extends StatelessWidget {
               margin: const EdgeInsets.all(12),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue),
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue[50]),
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.blue
+                    : Colors.blue[50],
+              ),
               child: ListTile(
                 onTap: () {
                   Navigator.of(context)

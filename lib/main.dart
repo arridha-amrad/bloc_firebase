@@ -1,9 +1,14 @@
-import 'package:bloc_firebase/presentations/home/home_view.dart';
+import 'package:bloc_firebase/presentations/entry/entry_view.dart';
 import 'package:bloc_firebase/presentations/login/login_view.dart';
+import 'package:bloc_firebase/presentations/settings/bloc/settings_bloc.dart';
 import 'package:bloc_firebase/routes.dart';
+import 'package:bloc_firebase/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'firebase_options.dart';
 
@@ -12,7 +17,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  final directory = await getApplicationDocumentsDirectory();
+  final storage = await HydratedStorage.build(
+    storageDirectory: directory,
+  );
+  HydratedBlocOverrides.runZoned(
+    () => runApp(const MyApp()),
+    storage: storage,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,31 +32,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: AppRoutes.all,
-      theme: ThemeData(
-        floatingActionButtonTheme:
-            const FloatingActionButtonThemeData(elevation: 0),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(elevation: MaterialStateProperty.all(0)),
-        ),
-        appBarTheme: const AppBarTheme(elevation: 0),
-      ),
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-                body: Center(
-              child: CircularProgressIndicator(),
-            ));
-          }
-          final user = snapshot.data;
-          if (user == null) {
-            return const LoginView();
-          }
-          return const HomeView();
+    return BlocProvider(
+      create: (context) => SettingsBloc(),
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            routes: AppRoutes.all,
+            themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            darkTheme: MyTheme.dark,
+            theme: MyTheme.light,
+            home: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Scaffold(
+                      body: Center(
+                    child: CircularProgressIndicator(),
+                  ));
+                }
+                final user = snapshot.data;
+                if (user == null) {
+                  return const LoginView();
+                }
+                return const EntryView();
+              },
+            ),
+          );
         },
       ),
     );

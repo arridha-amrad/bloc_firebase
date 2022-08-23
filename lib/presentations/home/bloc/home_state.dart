@@ -9,7 +9,7 @@ class HomeState extends Equatable {
 
   const HomeState({
     this.todos = const <Todo>[],
-    this.isLoading = false,
+    this.isLoading = true,
   });
 
   HomeState copyWith({

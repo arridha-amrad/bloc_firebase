@@ -13,12 +13,12 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
-        throw AuthException(message: "Email has been registered");
+        throw const AuthException(message: "Email has been registered");
       }
     } catch (e) {
       rethrow;
     }
-    throw AuthException(message: "Something went wrong");
+    throw const AuthException(message: "Something went wrong");
   }
 
   @override
@@ -34,22 +34,22 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
-        throw AuthException(message: "User not found");
+        throw const AuthException(message: "User not found");
       }
       if (e.code == "wrong-password") {
-        throw AuthException(message: "Invalid email and password");
+        throw const AuthException(message: "Invalid email and password");
       }
     } catch (e) {
       rethrow;
     }
-    throw AuthException(message: "Something went wrong");
+    throw const AuthException(message: "Something went wrong");
   }
 
   @override
   Future<void> sendEmailVerification() async {
     final user = _auth.currentUser;
     if (user == null) {
-      throw AuthException(
+      throw const AuthException(
           message: "Failed to get current user after registration complete");
     }
     await user.sendEmailVerification();

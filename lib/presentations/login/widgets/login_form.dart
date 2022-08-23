@@ -1,5 +1,5 @@
 import 'package:bloc_firebase/presentations/login/bloc/login_bloc.dart';
-import 'package:bloc_firebase/presentations/signup/signup_view.dart';
+import 'package:bloc_firebase/routes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +17,9 @@ class LoginForm extends StatelessWidget {
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
                 content: Text(state.message), backgroundColor: Colors.red));
+        }
+        if (state.status.isSubmissionSuccess) {
+          Navigator.of(context).pushReplacementNamed(Routes.entry.name);
         }
       },
       child: ListView(
@@ -47,8 +50,7 @@ class RegisterLinkButton extends StatelessWidget {
       alignment: Alignment.center,
       child: TextButton(
           onPressed: () {
-            Navigator.of(context)
-                .pushAndRemoveUntil(SignUpView.route(), (route) => false);
+            Navigator.of(context).pushReplacementNamed(Routes.signup.name);
           },
           child: const Text("Register")),
     );
@@ -87,6 +89,7 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextFormField(
+          obscureText: true,
           onChanged: (value) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(value)),
           decoration: const InputDecoration(

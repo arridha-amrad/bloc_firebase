@@ -1,5 +1,6 @@
 import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/presentations/login/login_view.dart';
+import 'package:bloc_firebase/routes.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,10 +9,6 @@ import 'bloc/signup_bloc.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({Key? key}) : super(key: key);
-
-  static Route<void> route() {
-    return MaterialPageRoute<void>(builder: (_) => const SignUpView());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +71,7 @@ class SignUpView extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.of(context)
-                      .pushAndRemoveUntil(LoginView.route(), (route) => false);
+                  Navigator.of(context).pushReplacementNamed(Routes.login.name);
                 },
                 child: const Text("Ok"))
           ],
