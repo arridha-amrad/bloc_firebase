@@ -8,13 +8,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/entry_bloc.dart';
 
 class EntryView extends StatelessWidget {
-  final screens = const [
+  final screens = [
     HomeView(),
     ProfileView(),
     ChatView(),
   ];
 
-  const EntryView({Key? key}) : super(key: key);
+  EntryView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

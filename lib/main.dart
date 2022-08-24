@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
                 if (user == null) {
                   return const LoginView();
                 }
-                return const EntryView();
+                return EntryView();
               },
             ),
           );

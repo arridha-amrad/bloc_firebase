@@ -27,7 +27,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
     try {
       final user = await _userRepository.show(authUser.uid);
-      print("user : $user");
       emit(state.copyWith(
         user: user,
         isLoading: false,

@@ -15,3 +15,5 @@ class TextChanged extends ChatRoomEvent {
 }
 
 class Send extends ChatRoomEvent {}
+
+class InitRoom extends ChatRoomEvent {}
