@@ -20,7 +20,11 @@ class MessageList extends StatelessWidget {
                 return Align(
                   alignment: Alignment.topLeft,
                   child: Container(
-                      margin: const EdgeInsets.all(12),
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width - 40,
+                      ),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
@@ -32,7 +36,11 @@ class MessageList extends StatelessWidget {
               return Align(
                 alignment: Alignment.topRight,
                 child: Container(
-                    margin: const EdgeInsets.all(12),
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width - 40,
+                    ),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.green,

@@ -1,9 +1,9 @@
 import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/domain/repositories/chat_repository_impl.dart';
+import 'package:bloc_firebase/presentations/chat_room/model/chat_room.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/chat_field.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/message_list.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/send_button.dart';
-import 'package:bloc_firebase/presentations/chats/models/chat_extend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,56 +14,51 @@ class ChatRoomView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatExtend? chat =
-        ModalRoute.of(context)?.settings.arguments as ChatExtend?;
+    ChatRoom chatRoom = ModalRoute.of(context)?.settings.arguments as ChatRoom;
 
     return BlocProvider(
       create: (context) => ChatRoomBloc(
         authenticationRepository: AuthenticationRepositoryImpl(),
         chatRepository: ChatRepositoryImpl(),
-      )..add(InitRoom(chat)),
-      child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(chat.partner.avatar),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(chat.partner.username),
+      )..add(InitRoom(chatRoom)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(chatRoom.avatar),
+              ),
+              const SizedBox(width: 12),
+              Text(chatRoom.username),
+            ],
+          ),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+          ),
+          child: Column(children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                ),
+                child: const MessageList(),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  ChatField(),
+                  SizedBox(width: 8),
+                  SendButton(),
                 ],
               ),
             ),
-            body: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-              ),
-              child: Column(children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                    ),
-                    child: const MessageList(),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      ChatField(),
-                      SizedBox(width: 8),
-                      SendButton(),
-                    ],
-                  ),
-                ),
-              ]),
-            ),
-          );
-        },
+          ]),
+        ),
       ),
     );
   }

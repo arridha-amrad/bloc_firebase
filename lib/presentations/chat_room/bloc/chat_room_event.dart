@@ -14,15 +14,10 @@ class TextChanged extends ChatRoomEvent {
   List<Object> get props => [text];
 }
 
-class Send extends ChatRoomEvent {
-  final String chatId;
-  const Send(this.chatId);
-  @override
-  List<Object> get props => [chatId];
-}
+class Send extends ChatRoomEvent {}
 
 class InitRoom extends ChatRoomEvent {
-  final ChatExtend? chat;
+  final ChatRoom chat;
   const InitRoom(this.chat);
   @override
   List<Object?> get props => [chat];

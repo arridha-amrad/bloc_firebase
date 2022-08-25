@@ -1,3 +1,4 @@
+import 'package:bloc_firebase/presentations/chat_room/model/chat_room.dart';
 import 'package:bloc_firebase/presentations/chats/models/chat_extend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +10,8 @@ class SendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatExtend chat =
-        ModalRoute.of(context)!.settings.arguments as ChatExtend;
+    final ChatRoom chat =
+        ModalRoute.of(context)!.settings.arguments as ChatRoom;
 
     return Container(
       decoration: BoxDecoration(
@@ -21,7 +22,7 @@ class SendButton extends StatelessWidget {
         child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
           builder: (context, state) {
             return IconButton(
-              onPressed: () => context.read<ChatRoomBloc>().add(Send(chat.id)),
+              onPressed: () => context.read<ChatRoomBloc>().add(Send()),
               icon: const Icon(Icons.send_rounded),
               color: Colors.white,
             );

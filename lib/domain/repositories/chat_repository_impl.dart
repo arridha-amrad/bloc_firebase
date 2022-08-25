@@ -1,5 +1,6 @@
 import 'package:bloc_firebase/domain/domain.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatRepositoryImpl extends ChatRepository {
   final _roomStore = FirebaseFirestore.instance.collection("rooms");
@@ -14,14 +15,25 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
-  Future<void> create(Message message, String? chatId) async {
+  Future<String> create(Message message, String? chatId) async {
+    String roomId = "";
     if (chatId == null) {
-      await _sendMessageWithChatId(message, chatId!);
+      roomId = const Uuid().v4();
+      await _roomStore.doc(roomId).set({
+        "id": roomId,
+        "members": [message.sender, message.receiver],
+        "latestMessage": message.body,
+        "latestDate": message.createdAt.millisecondsSinceEpoch,
+      });
+    } else {
+      await _roomStore.doc(chatId).update({
+        "latestMessage": message.body,
+        "latestDate": message.createdAt.millisecondsSinceEpoch,
+      });
+      roomId = chatId;
     }
-    await _roomStore.doc(chatId).update({
-      "latestMessage": message.body,
-      "latestDate": message.createdAt.millisecondsSinceEpoch,
-    });
+    await _sendMessageWithChatId(message, roomId);
+    return roomId;
   }
 
   @override
@@ -29,6 +41,7 @@ class ChatRepositoryImpl extends ChatRepository {
     final authUserId = authRepo.getAuthUser()!.uid;
     yield* _roomStore
         .where("members", arrayContains: authUserId)
+        .orderBy("latestDate", descending: true)
         .snapshots()
         .map((snapshot) {
       final result =

@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_firebase/domain/abstracts/abstracts.dart';
 import 'package:bloc_firebase/domain/models/message.dart';
-import 'package:bloc_firebase/presentations/chat_room/model_validator/text.dart';
-import 'package:bloc_firebase/presentations/chats/models/chat_extend.dart';
+import 'package:bloc_firebase/presentations/chat_room/model/chat_room.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:uuid/uuid.dart';
+
+import '../model/text.dart';
 
 part 'chat_room_event.dart';
 part 'chat_room_state.dart';
@@ -26,17 +27,24 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
 
   Future<void> _onInitRoom(InitRoom event, Emitter<ChatRoomState> emit) async {
     final authUserId = _authenticationRepository.getAuthUser()!.uid;
-    final ChatExtend chat = event.chat;
-    final receiverId =
-        chat.members.where((userId) => userId != authUserId).first;
-    await emit.forEach(
-      _chatRepository.getMessages(chat.id),
-      onData: (List<Message> data) => state.copyWith(
+    final ChatRoom chatRoom = event.chat;
+    final receiverId = chatRoom.userId;
+    if (chatRoom.chatId != null) {
+      await emit.forEach(
+        _chatRepository.getMessages(chatRoom.chatId!),
+        onData: (List<Message> data) => state.copyWith(
+          authUserId: authUserId,
+          messages: data,
+          receiverId: receiverId,
+          chatId: chatRoom.chatId,
+        ),
+      );
+    } else {
+      emit(state.copyWith(
         authUserId: authUserId,
-        messages: data,
         receiverId: receiverId,
-      ),
-    );
+      ));
+    }
   }
 
   void _onTextChanged(TextChanged event, Emitter<ChatRoomState> emit) {
@@ -45,20 +53,28 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   }
 
   Future<void> _onSend(Send event, Emitter<ChatRoomState> emit) async {
-    final chatId = event.chatId;
-    final id = const Uuid().v4();
+    final chatId = state.chatId;
     final Message message = Message(
-      id: id,
+      id: const Uuid().v4(),
       body: state.text.value,
       createdAt: DateTime.now(),
       isRead: false,
       sender: state.authUserId,
       receiver: state.receiverId,
     );
-    await _chatRepository.create(message, chatId);
+    final roomId = await _chatRepository.create(message, chatId);
     emit(state.copyWith(
       status: FormzStatus.submissionSuccess,
       text: const Text.pure(),
     ));
+    if (chatId == null) {
+      await emit.forEach(
+        _chatRepository.getMessages(roomId),
+        onData: (List<Message> data) => state.copyWith(
+          messages: data,
+          chatId: roomId,
+        ),
+      );
+    }
   }
 }
