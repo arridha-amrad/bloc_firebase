@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_firebase/domain/domain.dart';
+import 'package:bloc_firebase/presentations/chats/models/chat_extend.dart';
 import 'package:equatable/equatable.dart';
 
 part 'chats_event.dart';
@@ -19,6 +20,27 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         _authenticationRepository = authenticationRepository,
         super(const ChatsState()) {
     on<LoadChats>(_onLoad);
+    on<LoadExtendChats>(_onLoadExtendChats);
+  }
+
+  Future<void> _onLoadExtendChats(
+      LoadExtendChats event, Emitter<ChatsState> emit) async {
+    final chats = state.chats;
+    final authUserId = state.authUserId;
+    List<ChatExtend> extendChats = [];
+    for (var chat in chats) {
+      final userId = chat.members.where((userId) => userId != authUserId).first;
+      final user = await _userRepository.show(userId);
+      final myChat = ChatExtend(
+        id: chat.id,
+        latestDate: chat.latestDate,
+        latestMessage: chat.latestMessage,
+        members: chat.members,
+        partner: user,
+      );
+      extendChats.add(myChat);
+    }
+    emit(state.copyWith(myChats: extendChats, isLoading: false));
   }
 
   Future<void> _onLoad(LoadChats event, Emitter<ChatsState> emit) async {

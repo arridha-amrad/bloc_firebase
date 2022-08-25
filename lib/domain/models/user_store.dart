@@ -3,11 +3,12 @@ import 'package:equatable/equatable.dart';
 
 class UserStore extends Equatable {
   @override
-  List<Object?> get props => [id, username, email, createdAt];
+  List<Object?> get props => [id, username, email, createdAt, avatar];
 
   final String id;
   final String username;
   final String email;
+  final String avatar;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,6 +18,7 @@ class UserStore extends Equatable {
     this.email,
     this.createdAt,
     this.updatedAt,
+    this.avatar,
   );
 
   factory UserStore.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class UserStore extends Equatable {
       json["email"] as String,
       DateTime.parse(json["createdAt"] as String),
       DateTime.parse(json["updatedAt"] as String),
+      json["avatar"] as String,
     );
   }
 
@@ -36,6 +39,7 @@ class UserStore extends Equatable {
       snap["email"] as String,
       DateTime.parse(snap["createdAt"] as String),
       DateTime.parse(snap["updatedAt"] as String),
+      snap["avatar"] as String,
     );
   }
 
@@ -46,6 +50,7 @@ class UserStore extends Equatable {
       "email": email,
       "createdAt": createdAt.toIso8601String(),
       "updatedAt": updatedAt.toIso8601String(),
+      "avatar": avatar,
     };
   }
 
@@ -55,6 +60,7 @@ class UserStore extends Equatable {
     String? email,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? avatar,
   }) {
     return UserStore(
       id ?? this.id,
@@ -62,6 +68,7 @@ class UserStore extends Equatable {
       email ?? this.email,
       createdAt ?? this.createdAt,
       updatedAt ?? this.updatedAt,
+      avatar ?? this.avatar,
     );
   }
 }

@@ -44,8 +44,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           message: "Todo deleted successfully"));
     } on TodoException catch (e) {
       emit(state.copyWith(
-          status: FormzStatus.submissionSuccess,
-          message: "Todo deleted successfully"));
+          status: FormzStatus.submissionSuccess, message: e.message));
     } catch (e) {
       rethrow;
     }

@@ -49,9 +49,7 @@ class SelectContactBloc extends Bloc<SelectContactEvent, SelectContactState> {
         },
       );
     } on AuthException catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-      ));
+      emit(state.copyWith(isLoading: false, message: e.message));
     } catch (e) {
       rethrow;
     }

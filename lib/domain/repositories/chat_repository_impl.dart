@@ -4,10 +4,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ChatRepositoryImpl extends ChatRepository {
   final _roomStore = FirebaseFirestore.instance.collection("rooms");
   final AuthenticationRepository authRepo = AuthenticationRepositoryImpl();
+
+  Future<void> _sendMessageWithChatId(Message message, String chatId) async {
+    await _roomStore
+        .doc(chatId)
+        .collection("messages")
+        .doc(message.id)
+        .set(message.toJson());
+  }
+
   @override
-  Future create(Message message) {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<void> create(Message message, String? chatId) async {
+    if (chatId == null) {
+      await _sendMessageWithChatId(message, chatId!);
+    }
+    await _roomStore.doc(chatId).update({
+      "latestMessage": message.body,
+      "latestDate": message.createdAt.millisecondsSinceEpoch,
+    });
   }
 
   @override
@@ -24,8 +38,16 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
-  Stream<List<Message>> getMessages() {
-    // TODO: implement getMessages
-    throw UnimplementedError();
+  Stream<List<Message>> getMessages(String chatId) async* {
+    yield* _roomStore
+        .doc(chatId)
+        .collection("messages")
+        .orderBy("createdAt")
+        .snapshots()
+        .map((snapshot) {
+      final result =
+          snapshot.docs.map((doc) => Message.fromSnapshot(doc)).toList();
+      return result;
+    });
   }
 }

@@ -4,7 +4,7 @@ abstract class ChatRoomEvent extends Equatable {
   const ChatRoomEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class TextChanged extends ChatRoomEvent {
@@ -14,6 +14,16 @@ class TextChanged extends ChatRoomEvent {
   List<Object> get props => [text];
 }
 
-class Send extends ChatRoomEvent {}
+class Send extends ChatRoomEvent {
+  final String chatId;
+  const Send(this.chatId);
+  @override
+  List<Object> get props => [chatId];
+}
 
-class InitRoom extends ChatRoomEvent {}
+class InitRoom extends ChatRoomEvent {
+  final ChatExtend? chat;
+  const InitRoom(this.chat);
+  @override
+  List<Object?> get props => [chat];
+}

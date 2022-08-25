@@ -24,7 +24,7 @@ class AppRoutes {
     Routes.todoForm.name: (_) => const TodoFormView(),
     Routes.settings.name: (_) => const SettingsView(),
     Routes.selectContact.name: (_) => const SelectContact(),
-    Routes.entry.name: (_) => EntryView(),
+    Routes.entry.name: (_) => const EntryView(),
     Routes.chatRoom.name: (_) => const ChatRoomView(),
   };
 }

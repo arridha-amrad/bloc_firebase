@@ -28,30 +28,36 @@ class ChatView extends StatelessWidget {
           ),
           child: const Icon(Icons.message),
         ),
-        body: BlocBuilder<ChatsBloc, ChatsState>(
-          builder: (context, state) {
-            return ListView.builder(
-              itemCount: state.chats.length,
-              itemBuilder: (context, index) {
-                final chat = state.chats[index];
-                final partner = chat.users
-                    .where((user) => user.id != state.authUserId)
-                    .first;
-                return ListTile(
-                  onTap: () => Navigator.of(context)
-                      .pushNamed(Routes.chatRoom.name, arguments: chat),
-                  trailing: Text(DateFormat.jm().format(chat.latestDate)),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      partner.avatar,
-                    ),
-                  ),
-                  title: Text(partner.username),
-                  subtitle: Text(chat.latestMessage),
-                );
-              },
-            );
+        body: BlocListener<ChatsBloc, ChatsState>(
+          listenWhen: (previous, current) => previous.chats != current.chats,
+          listener: (context, state) {
+            context.read<ChatsBloc>().add(LoadExtendChats());
           },
+          child: BlocBuilder<ChatsBloc, ChatsState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                itemCount: state.chats.length,
+                itemBuilder: (context, index) {
+                  final chat = state.myChats[index];
+                  final partner = chat.partner;
+                  return ListTile(
+                    onTap: () => Navigator.of(context)
+                        .pushNamed(Routes.chatRoom.name, arguments: chat),
+                    trailing: Text(DateFormat.jm().format(chat.latestDate)),
+                    leading: CircleAvatar(
+                        backgroundImage: NetworkImage(partner.avatar)),
+                    title: Text(partner.username),
+                    subtitle: Text(chat.latestMessage),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

@@ -9,4 +9,4 @@ abstract class ChatsEvent extends Equatable {
 
 class LoadChats extends ChatsEvent {}
 
-class LoadExtendsChat extends ChatsEvent {}
+class LoadExtendChats extends ChatsEvent {}

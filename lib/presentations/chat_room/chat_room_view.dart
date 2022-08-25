@@ -1,7 +1,9 @@
 import 'package:bloc_firebase/domain/domain.dart';
+import 'package:bloc_firebase/domain/repositories/chat_repository_impl.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/chat_field.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/message_list.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/send_button.dart';
+import 'package:bloc_firebase/presentations/chats/models/chat_extend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,19 +14,27 @@ class ChatRoomView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Chat? chat = ModalRoute.of(context)?.settings.arguments as Chat?;
+    final ChatExtend? chat =
+        ModalRoute.of(context)?.settings.arguments as ChatExtend?;
 
     return BlocProvider(
       create: (context) => ChatRoomBloc(
         authenticationRepository: AuthenticationRepositoryImpl(),
-      ),
+        chatRepository: ChatRepositoryImpl(),
+      )..add(InitRoom(chat)),
       child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
         builder: (context, state) {
-          final partner =
-              chat!.users.where((user) => user.id != state.authUserId).first;
           return Scaffold(
             appBar: AppBar(
-              title: Text(partner.username),
+              title: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(chat.partner.avatar),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(chat.partner.username),
+                ],
+              ),
             ),
             body: Container(
               decoration: BoxDecoration(

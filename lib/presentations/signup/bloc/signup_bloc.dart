@@ -68,6 +68,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
             user.email!,
             DateTime.now(),
             DateTime.now(),
+            "https://firebasestorage.googleapis.com/v0/b/learn-flutter-firebase-081215.appspot.com/o/avatar%2Fdefault-profile-icon-24.jpg?alt=media&token=b8609a7d-ab82-43e2-8dc6-a460b715e30b",
           ),
         );
         await _authenticationRepository.sendEmailVerification();

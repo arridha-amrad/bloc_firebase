@@ -30,7 +30,9 @@ class SelectContact extends StatelessWidget {
                       Routes.chatRoom.name,
                       arguments: user,
                     ),
-                    leading: const CircleAvatar(),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(user.avatar),
+                    ),
                     title: Text(user.username),
                     subtitle: Text(user.email),
                   );

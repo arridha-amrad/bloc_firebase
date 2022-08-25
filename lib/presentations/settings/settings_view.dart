@@ -1,8 +1,6 @@
 import 'package:bloc_firebase/presentations/settings/bloc/settings_bloc.dart';
 import 'package:bloc_firebase/presentations/settings/widgets/theme_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsView extends StatelessWidget {
