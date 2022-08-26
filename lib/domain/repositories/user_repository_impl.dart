@@ -32,4 +32,18 @@ class UserRepositoryImpl extends UserRepository {
       return snapshot.docs.map((doc) => UserStore.fromSnapshot(doc)).toList();
     });
   }
+
+  @override
+  Stream<List<UserStore>> search(String username) async* {
+    yield* _userStore
+        .orderBy("username")
+        .startAt([username])
+        .endAt(["$username\uf8ff"])
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => UserStore.fromSnapshot(doc))
+              .toList();
+        });
+  }
 }

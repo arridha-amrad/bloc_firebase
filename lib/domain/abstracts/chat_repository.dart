@@ -4,4 +4,5 @@ abstract class ChatRepository {
   Future<String> create(Message message, String? chatId);
   Stream<List<Message>> getMessages(String chatId);
   Stream<List<Chat>> getChats();
+  Future<void> update(List<Message> messages, String chatId);
 }

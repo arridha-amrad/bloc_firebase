@@ -13,7 +13,7 @@ class ChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChatsBloc(
+      create: (_) => ChatsBloc(
         chatRepository: ChatRepositoryImpl(),
         authenticationRepository: AuthenticationRepositoryImpl(),
         userRepository: UserRepositoryImpl(),
@@ -22,12 +22,19 @@ class ChatView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("Chats"),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.green,
-          onPressed: () => Navigator.of(context).pushNamed(
-            Routes.selectContact.name,
-          ),
-          child: const Icon(Icons.message),
+        floatingActionButton: BlocBuilder<ChatsBloc, ChatsState>(
+          buildWhen: (previous, current) => previous.myChats != current.myChats,
+          builder: (context, state) {
+            return FloatingActionButton(
+              backgroundColor: Colors.green,
+              onPressed: () => Navigator.of(context)
+                  .pushNamed(Routes.selectContact.name, arguments: context),
+              child: const Icon(
+                Icons.message,
+                color: Colors.white,
+              ),
+            );
+          },
         ),
         body: BlocListener<ChatsBloc, ChatsState>(
           listenWhen: (previous, current) => previous.chats != current.chats,

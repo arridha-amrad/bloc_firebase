@@ -60,6 +60,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         isDone: state.isDone.value,
         description: state.description.value,
         title: state.title.value,
+        due: state.due.value,
       );
       await _todoRepository.update(newTodo);
       emit(state.copyWith(

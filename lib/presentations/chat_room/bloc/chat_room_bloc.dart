@@ -23,6 +23,15 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
     on<TextChanged>(_onTextChanged);
     on<Send>(_onSend);
     on<InitRoom>(_onInitRoom);
+    on<ReadMessage>(_onReadMessage);
+  }
+
+  Future<void> _onReadMessage(
+      ReadMessage event, Emitter<ChatRoomState> emit) async {
+    final List<Message> messages = List.from(state.messages);
+    final messagesFromOther =
+        messages.where((msg) => msg.receiver == state.authUserId);
+    await _chatRepository.update(messagesFromOther.toList(), state.chatId!);
   }
 
   Future<void> _onInitRoom(InitRoom event, Emitter<ChatRoomState> emit) async {

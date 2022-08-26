@@ -15,3 +15,12 @@ class SetUsers extends SelectContactEvent {
   @override
   List<Object> get props => [users];
 }
+
+class SearchChanged extends SelectContactEvent {
+  final String text;
+  const SearchChanged(this.text);
+  @override
+  List<Object> get props => [text];
+}
+
+class ToggleSearch extends SelectContactEvent {}

@@ -18,6 +18,26 @@ class SelectContactBloc extends Bloc<SelectContactEvent, SelectContactState> {
         super(const SelectContactState()) {
     on<SetUsers>(_onSetUsers);
     on<LoadUsers>(_onLoadUsers);
+    on<SearchChanged>(_onSearchChanged);
+    on<ToggleSearch>(_onSearchToggled);
+  }
+
+  Future<void> _onSearchChanged(
+      SearchChanged event, Emitter<SelectContactState> emit) async {
+    final key = event.text;
+    final authUser = _authenticationRepository.getAuthUser();
+
+    await emit.forEach(
+      _userRepository.search(key),
+      onData: (List<UserStore> data) {
+        final result = data.where((user) => user.id != authUser!.uid).toList();
+        return state.copyWith(users: result);
+      },
+    );
+  }
+
+  void _onSearchToggled(ToggleSearch event, Emitter<SelectContactState> emit) {
+    emit(state.copyWith(isSearch: !state.isSearch));
   }
 
   void _onSetUsers(SetUsers event, Emitter<SelectContactState> emit) {

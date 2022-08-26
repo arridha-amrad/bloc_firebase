@@ -12,13 +12,14 @@ class ChatRoomState extends Equatable {
   final String? chatId;
   final List<Message> messages;
 
-  ChatRoomState copyWith(
-      {Text? text,
-      FormzStatus? status,
-      String? authUserId,
-      String? receiverId,
-      List<Message>? messages,
-      String? chatId}) {
+  ChatRoomState copyWith({
+    Text? text,
+    FormzStatus? status,
+    String? authUserId,
+    String? receiverId,
+    List<Message>? messages,
+    String? chatId,
+  }) {
     return ChatRoomState(
       text: text ?? this.text,
       status: status ?? this.status,

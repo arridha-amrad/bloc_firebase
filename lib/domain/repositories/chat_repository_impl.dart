@@ -15,6 +15,14 @@ class ChatRepositoryImpl extends ChatRepository {
   }
 
   @override
+  Future<void> update(List<Message> messages, String chatId) async {
+    final messagesCollection = _roomStore.doc(chatId).collection("messages");
+    for (var msg in messages) {
+      await messagesCollection.doc(msg.id).update({"isRead": true});
+    }
+  }
+
+  @override
   Future<String> create(Message message, String? chatId) async {
     String roomId = "";
     if (chatId == null) {

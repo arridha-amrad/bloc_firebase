@@ -22,3 +22,5 @@ class InitRoom extends ChatRoomEvent {
   @override
   List<Object?> get props => [chat];
 }
+
+class ReadMessage extends ChatRoomEvent {}

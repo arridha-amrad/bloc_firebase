@@ -14,9 +14,15 @@ class TodoInputDue extends StatefulWidget {
 
 class _TodoInputDueState extends State<TodoInputDue> {
   TextEditingController dueController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final todo = ModalRoute.of(context)?.settings.arguments as Todo?;
+    if (todo != null) {
+      final formattedDate = _dateFormatter(todo.due);
+      final formattedTime = _timeFormatter(todo.due);
+      dueController.text = "$formattedTime / $formattedDate";
+    }
     return BlocListener<TodoBloc, TodoState>(
       listener: (context, state) {
         if (state.status.isSubmissionSuccess) {
@@ -26,19 +32,15 @@ class _TodoInputDueState extends State<TodoInputDue> {
       child: BlocBuilder<TodoBloc, TodoState>(
         buildWhen: (previous, current) => previous.due != current.due,
         builder: (context, state) {
-          if (todo != null) {
-            final formattedDate = _dateFormatter(todo.due);
-            final formattedTime = _timeFormatter(todo.due);
-            dueController.text = "$formattedTime / $formattedDate";
-          }
           return TextFormField(
             onTap: () => _pickDueTime(context),
             controller: dueController,
             readOnly: true,
             decoration: const InputDecoration(
-                suffixIcon: Icon(Icons.calendar_month),
-                border: OutlineInputBorder(),
-                labelText: "Due time"),
+              suffixIcon: Icon(Icons.calendar_month),
+              border: OutlineInputBorder(),
+              labelText: "Due time",
+            ),
           );
         },
       ),

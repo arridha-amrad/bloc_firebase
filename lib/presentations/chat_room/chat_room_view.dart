@@ -35,15 +35,19 @@ class ChatRoomView extends StatelessWidget {
         ),
         body: Container(
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.grey[200]
+                : Colors.grey.shade900,
           ),
           child: Column(children: [
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey[200]
+                      : Colors.grey.shade900,
                 ),
-                child: const MessageList(),
+                child: MessageList(),
               ),
             ),
             Container(

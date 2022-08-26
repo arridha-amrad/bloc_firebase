@@ -13,6 +13,17 @@ class MyTheme {
         elevation: MaterialStateProperty.all(0),
       ),
     ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color.fromARGB(137, 101, 101, 101),
+      elevation: 8,
+      type: BottomNavigationBarType.fixed,
+      selectedIconTheme: IconThemeData(color: Colors.white, size: 26),
+      unselectedIconTheme: IconThemeData(
+        color: Color.fromARGB(137, 101, 101, 101),
+        size: 26,
+      ),
+    ),
   );
 
   static ThemeData light = ThemeData(
@@ -34,10 +45,9 @@ class MyTheme {
     ),
     iconTheme: const IconThemeData(color: Colors.black),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      selectedItemColor: Colors.black,
       elevation: 8,
       type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: false,
-      showSelectedLabels: false,
       selectedIconTheme: IconThemeData(color: Colors.black, size: 26),
       unselectedIconTheme: IconThemeData(
         color: Color.fromARGB(137, 101, 101, 101),

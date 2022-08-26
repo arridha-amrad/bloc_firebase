@@ -2,57 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/chat_room_bloc.dart';
+import 'my_message.dart';
+import 'some_one_else_message.dart';
 
 class MessageList extends StatelessWidget {
-  const MessageList({Key? key}) : super(key: key);
-
+  final ScrollController _controller = ScrollController();
+  MessageList({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatRoomBloc, ChatRoomState>(
-      buildWhen: (previous, current) => previous.messages != current.messages,
-      builder: (context, state) {
-        return ListView.builder(
+    return BlocListener<ChatRoomBloc, ChatRoomState>(
+      listenWhen: (previous, current) => previous.messages != current.messages,
+      listener: (context, state) {
+        context.read<ChatRoomBloc>().add(ReadMessage());
+      },
+      child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
+        buildWhen: (previous, current) => previous.messages != current.messages,
+        builder: (context, state) {
+          // automatic scroll to bottom of list
+          WidgetsBinding.instance.addPostFrameCallback((_) =>
+              {_controller.jumpTo(_controller.position.maxScrollExtent)});
+          return ListView.builder(
+            controller: _controller,
             shrinkWrap: true,
             itemCount: state.messages.length,
             itemBuilder: (context, index) {
               final message = state.messages[index];
               if (message.sender == state.authUserId) {
-                return Align(
-                  alignment: Alignment.topLeft,
-                  child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width - 40,
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      child: Text(message.body)),
-                );
+                return MyMessage(message: message);
               }
-              return Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width - 40,
-                    ),
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.green,
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      message.body,
-                      style: const TextStyle(color: Colors.white),
-                    )),
-              );
-            });
-      },
+              return SomeOneElseMessage(message: message);
+            },
+          );
+        },
+      ),
     );
   }
 }

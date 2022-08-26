@@ -1,5 +1,3 @@
-import 'package:bloc_firebase/presentations/chat_room/model/chat_room.dart';
-import 'package:bloc_firebase/presentations/chats/models/chat_extend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,9 +8,6 @@ class SendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatRoom chat =
-        ModalRoute.of(context)!.settings.arguments as ChatRoom;
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
