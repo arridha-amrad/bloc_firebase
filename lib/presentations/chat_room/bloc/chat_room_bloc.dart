@@ -57,8 +57,8 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   }
 
   void _onTextChanged(TextChanged event, Emitter<ChatRoomState> emit) {
-    emit(state.copyWith(
-        text: Text.dirty(event.text), status: Formz.validate([state.text])));
+    final text = Text.dirty(event.text);
+    emit(state.copyWith(text: text, status: Formz.validate([text])));
   }
 
   Future<void> _onSend(Send event, Emitter<ChatRoomState> emit) async {

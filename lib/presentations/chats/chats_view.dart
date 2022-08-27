@@ -12,9 +12,10 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ChatRepository chatRepository = ChatRepositoryImpl();
     return BlocProvider(
       create: (_) => ChatsBloc(
-        chatRepository: ChatRepositoryImpl(),
+        chatRepository: chatRepository,
         authenticationRepository: AuthenticationRepositoryImpl(),
         userRepository: UserRepositoryImpl(),
       )..add(LoadChats()),
@@ -65,10 +66,34 @@ class ChatView extends StatelessWidget {
                     leading: CircleAvatar(
                         backgroundImage: NetworkImage(partner.avatar)),
                     title: Text(partner.username),
-                    subtitle: Text(
-                      chat.latestMessage,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    subtitle: StreamBuilder<Message>(
+                      stream: chatRepository.getMessage(
+                          chat.latestMessageId, chat.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        final message = snapshot.data;
+                        return Wrap(
+                          children: [
+                            message?.sender == state.authUserId
+                                ? Icon(
+                                    Icons.done_all,
+                                    color: message!.isRead
+                                        ? Colors.blue
+                                        : Colors.grey,
+                                    size: 15,
+                                  )
+                                : const SizedBox.shrink(),
+                            Text(
+                              message!.body,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   );
                 },

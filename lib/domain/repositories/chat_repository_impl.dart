@@ -1,4 +1,5 @@
 import 'package:bloc_firebase/domain/domain.dart';
+import 'package:bloc_firebase/exceptions/chat_exception.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,12 +31,12 @@ class ChatRepositoryImpl extends ChatRepository {
       await _roomStore.doc(roomId).set({
         "id": roomId,
         "members": [message.sender, message.receiver],
-        "latestMessage": message.body,
+        "latestMessageId": message.id,
         "latestDate": message.createdAt.millisecondsSinceEpoch,
       });
     } else {
       await _roomStore.doc(chatId).update({
-        "latestMessage": message.body,
+        "latestMessageId": message.id,
         "latestDate": message.createdAt.millisecondsSinceEpoch,
       });
       roomId = chatId;
@@ -70,5 +71,30 @@ class ChatRepositoryImpl extends ChatRepository {
           snapshot.docs.map((doc) => Message.fromSnapshot(doc)).toList();
       return result;
     });
+  }
+
+  @override
+  Stream<Message> getMessage(String messageId, String chatId) async* {
+    yield* _roomStore
+        .doc(chatId)
+        .collection("messages")
+        .doc(messageId)
+        .snapshots()
+        .map((snap) {
+      final doc = snap.data();
+      if (doc == null) {
+        throw ChatException("chat not found");
+      }
+      final result = Message.fromJson(doc);
+      return result;
+    });
+
+    // final Map<String, dynamic>? message = doc.data();
+
+    // if (message == null) {
+    //   throw const ChatException("Chat not found");
+    // }
+
+    // return Message.fromJson(message);
   }
 }

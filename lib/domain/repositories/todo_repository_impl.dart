@@ -1,10 +1,10 @@
-import 'package:bloc_firebase/domain/abstracts/abstracts.dart';
+import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/exceptions/todo_exception.dart';
-import 'package:bloc_firebase/domain/models/todo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TodoRepositoryImpl extends TodoRepository {
   final _todoStore = FirebaseFirestore.instance.collection("todos");
+  final _authRepo = AuthenticationRepositoryImpl();
 
   @override
   Future<void> delete(Todo todo) async {
@@ -35,7 +35,9 @@ class TodoRepositoryImpl extends TodoRepository {
 
   @override
   Stream<List<Todo>> getAllTodos() async* {
+    final authUserId = _authRepo.getAuthUser()!.uid;
     yield* _todoStore
+        .where("userId", isEqualTo: authUserId)
         .orderBy("createdAt", descending: true)
         .snapshots()
         .map((snapshot) {

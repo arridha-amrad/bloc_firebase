@@ -13,6 +13,13 @@ class ChatField extends StatefulWidget {
 
 class _ChatFieldState extends State<ChatField> {
   TextEditingController textCon = TextEditingController();
+
+  @override
+  void dispose() {
+    textCon.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(

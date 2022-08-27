@@ -7,8 +7,8 @@ class Text extends FormzInput<String, TextValidationError> {
   const Text.dirty([super.value = ""]) : super.dirty();
 
   @override
-  TextValidationError? validator(String value) {
-    if (value.trim().isEmpty) {
+  TextValidationError? validator(String? value) {
+    if (value == null) {
       return TextValidationError.required;
     }
     return null;

@@ -16,7 +16,6 @@ class MyTheme {
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.white,
       unselectedItemColor: Color.fromARGB(137, 101, 101, 101),
-      elevation: 8,
       type: BottomNavigationBarType.fixed,
       selectedIconTheme: IconThemeData(color: Colors.white, size: 26),
       unselectedIconTheme: IconThemeData(
@@ -46,7 +45,6 @@ class MyTheme {
     iconTheme: const IconThemeData(color: Colors.black),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.black,
-      elevation: 8,
       type: BottomNavigationBarType.fixed,
       selectedIconTheme: IconThemeData(color: Colors.black, size: 26),
       unselectedIconTheme: IconThemeData(

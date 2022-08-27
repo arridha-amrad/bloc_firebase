@@ -7,38 +7,41 @@ class MessageItem extends StatelessWidget {
   const MessageItem({
     Key? key,
     required this.message,
-    required this.isMyMessage,
+    required this.isSender,
   }) : super(key: key);
 
   final Message message;
-  final bool isMyMessage;
+  final bool isSender;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(message.body),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              DateFormat.jm().format(message.createdAt),
-              style: const TextStyle(fontSize: 10),
-            ),
-            isMyMessage ? const SizedBox(width: 8) : const SizedBox.shrink(),
-            isMyMessage
-                ? Icon(
-                    Icons.check,
-                    size: 12,
-                    color: message.isRead
-                        ? Colors.blue
-                        : Theme.of(context).textTheme.bodyText1!.color,
-                  )
-                : const SizedBox.shrink()
-          ],
-        )
-      ],
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(message.body),
+          isSender ? const SizedBox(height: 3) : const SizedBox.shrink(),
+          isSender
+              ? Wrap(
+                  children: [
+                    Text(
+                      DateFormat.Hm().format(message.createdAt),
+                      style: const TextStyle(fontSize: 10),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.done_all,
+                      size: 15,
+                      color: message.isRead ? Colors.blue : Colors.grey,
+                    )
+                  ],
+                )
+              : const SizedBox.shrink()
+        ],
+      ),
     );
   }
 }

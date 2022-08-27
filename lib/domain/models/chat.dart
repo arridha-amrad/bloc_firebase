@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Chat {
   final String id;
-  final String latestMessage;
+  final String latestMessageId;
   final DateTime latestDate;
   final List<String> members;
 
   const Chat({
     required this.id,
     required this.latestDate,
-    required this.latestMessage,
+    required this.latestMessageId,
     required this.members,
   });
 
@@ -20,7 +20,7 @@ class Chat {
       id: snapshot["id"] as String,
       latestDate:
           DateTime.fromMillisecondsSinceEpoch(snapshot["latestDate"] as int),
-      latestMessage: snapshot["latestMessage"] as String,
+      latestMessageId: snapshot["latestMessageId"] as String,
       members: ids,
     );
   }
@@ -30,7 +30,7 @@ class Chat {
       id: json["id"] as String,
       latestDate:
           DateTime.fromMillisecondsSinceEpoch(json["latestDate"] as int),
-      latestMessage: json["latestMessage"],
+      latestMessageId: json["latestMessageId"],
       members: json["members"],
     );
   }
@@ -39,13 +39,13 @@ class Chat {
     return {
       "id": id,
       "latestDate": latestDate.millisecondsSinceEpoch,
-      "latestMessage": latestMessage,
+      "latestMessageId": latestMessageId,
       "members": members,
     };
   }
 
   @override
   String toString() {
-    return 'Chat(id: $id, latestMessage: $latestMessage, latestDate: $latestDate, members: $members,)';
+    return 'Chat(id: $id, latestMessageId: $latestMessageId, latestDate: $latestDate, members: $members,)';
   }
 }
