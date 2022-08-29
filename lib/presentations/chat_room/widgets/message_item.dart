@@ -35,7 +35,13 @@ class MessageItem extends StatelessWidget {
                     Icon(
                       Icons.done_all,
                       size: 15,
-                      color: message.isRead ? Colors.blue : Colors.grey,
+                      color: message.isRead
+                          ? Theme.of(context).brightness == Brightness.light
+                              ? Colors.blue
+                              : Colors.blue.shade900
+                          : Theme.of(context).brightness == Brightness.light
+                              ? Colors.grey
+                              : Colors.grey[200],
                     )
                   ],
                 )

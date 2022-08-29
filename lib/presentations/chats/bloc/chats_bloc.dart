@@ -31,15 +31,6 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     for (var chat in chats) {
       final userId = chat.members.where((userId) => userId != authUserId).first;
       final user = await _userRepository.show(userId);
-
-      Message? myMessage;
-
-      final message = _chatRepository
-          .getMessage(chat.latestMessageId, chat.id)
-          .listen((event) {});
-
-      message.onData((data) => myMessage = data);
-
       final myChat = ChatExtend(
         id: chat.id,
         latestDate: chat.latestDate,

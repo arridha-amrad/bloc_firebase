@@ -6,4 +6,5 @@ abstract class ChatRepository {
   Stream<List<Chat>> getChats();
   Future<void> update(List<Message> messages, String chatId);
   Stream<Message> getMessage(String messageId, String chatId);
+  Stream<int> sumUnreadMessages(String chatId);
 }

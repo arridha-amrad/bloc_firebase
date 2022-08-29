@@ -19,7 +19,9 @@ class SomeOneElseMessage extends StatelessWidget {
     return ChatBubble(
       clipper: ChatBubbleClipper1(type: BubbleType.receiverBubble),
       elevation: 0,
-      backGroundColor: Colors.white,
+      backGroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Colors.grey,
       margin: const EdgeInsets.only(top: 20),
       child: MessageItem(message: message, isSender: false),
     );

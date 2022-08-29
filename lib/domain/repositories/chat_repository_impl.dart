@@ -83,18 +83,22 @@ class ChatRepositoryImpl extends ChatRepository {
         .map((snap) {
       final doc = snap.data();
       if (doc == null) {
-        throw ChatException("chat not found");
+        throw const ChatException("chat not found");
       }
       final result = Message.fromJson(doc);
       return result;
     });
+  }
 
-    // final Map<String, dynamic>? message = doc.data();
-
-    // if (message == null) {
-    //   throw const ChatException("Chat not found");
-    // }
-
-    // return Message.fromJson(message);
+  @override
+  Stream<int> sumUnreadMessages(String chatId) async* {
+    final authUserId = authRepo.getAuthUser()!.uid;
+    yield* _roomStore
+        .doc(chatId)
+        .collection("messages")
+        .where("isRead", isEqualTo: false)
+        .where("receiver", isEqualTo: authUserId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 }

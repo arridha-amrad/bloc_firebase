@@ -1,13 +1,12 @@
 import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/domain/repositories/chat_repository_impl.dart';
 import 'package:bloc_firebase/presentations/chat_room/model/chat_room.dart';
-import 'package:bloc_firebase/presentations/chat_room/widgets/chat_field.dart';
 import 'package:bloc_firebase/presentations/chat_room/widgets/message_list.dart';
-import 'package:bloc_firebase/presentations/chat_room/widgets/message_send_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/chat_room_bloc.dart';
+import 'widgets/message_input.dart';
 
 class ChatRoomView extends StatelessWidget {
   const ChatRoomView({Key? key}) : super(key: key);
@@ -50,17 +49,7 @@ class ChatRoomView extends StatelessWidget {
                 child: MessageList(),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  ChatField(),
-                  SizedBox(width: 8),
-                  MessageSendButton(),
-                ],
-              ),
-            ),
+            const MessageInput(),
           ]),
         ),
       ),

@@ -2,10 +2,12 @@ import 'package:bloc_firebase/domain/domain.dart';
 import 'package:bloc_firebase/domain/repositories/chat_repository_impl.dart';
 import 'package:bloc_firebase/presentations/chat_room/model/chat_room.dart';
 import 'package:bloc_firebase/presentations/chats/bloc/chats_bloc.dart';
+
 import 'package:bloc_firebase/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+
+import 'widgets/chat_user.dart';
 
 class ChatView extends StatelessWidget {
   const ChatView({Key? key}) : super(key: key);
@@ -43,6 +45,8 @@ class ChatView extends StatelessWidget {
             context.read<ChatsBloc>().add(LoadExtendChats());
           },
           child: BlocBuilder<ChatsBloc, ChatsState>(
+            buildWhen: (previous, current) =>
+                previous.myChats != current.myChats,
             builder: (context, state) {
               if (state.isLoading) {
                 return const Center(
@@ -59,42 +63,12 @@ class ChatView extends StatelessWidget {
                       userId: partner.id,
                       username: partner.username,
                       chatId: chat.id);
-                  return ListTile(
-                    onTap: () => Navigator.of(context)
-                        .pushNamed(Routes.chatRoom.name, arguments: chatRoom),
-                    trailing: Text(DateFormat.jm().format(chat.latestDate)),
-                    leading: CircleAvatar(
-                        backgroundImage: NetworkImage(partner.avatar)),
-                    title: Text(partner.username),
-                    subtitle: StreamBuilder<Message>(
-                      stream: chatRepository.getMessage(
-                          chat.latestMessageId, chat.id),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        }
-                        final message = snapshot.data;
-                        return Wrap(
-                          children: [
-                            message?.sender == state.authUserId
-                                ? Icon(
-                                    Icons.done_all,
-                                    color: message!.isRead
-                                        ? Colors.blue
-                                        : Colors.grey,
-                                    size: 15,
-                                  )
-                                : const SizedBox.shrink(),
-                            Text(
-                              message!.body,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                  return ChatUser(
+                    chatRoom: chatRoom,
+                    chat: chat,
+                    chatRepository: chatRepository,
+                    partner: partner,
+                    state: state,
                   );
                 },
               );
