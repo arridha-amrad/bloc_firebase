@@ -14,7 +14,12 @@ class TextChanged extends ChatRoomEvent {
   List<Object> get props => [text];
 }
 
-class Send extends ChatRoomEvent {}
+class Send extends ChatRoomEvent {
+  final String text;
+  const Send(this.text);
+  @override
+  List<Object> get props => [text];
+}
 
 class InitRoom extends ChatRoomEvent {
   final ChatRoom chat;
@@ -24,3 +29,7 @@ class InitRoom extends ChatRoomEvent {
 }
 
 class ReadMessage extends ChatRoomEvent {}
+
+class ToggleEmojiPicker extends ChatRoomEvent {}
+
+class HideEmojiPicker extends ChatRoomEvent {}

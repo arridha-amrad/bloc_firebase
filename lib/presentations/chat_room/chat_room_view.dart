@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/chat_room_bloc.dart';
-import 'widgets/message_input.dart';
+import 'widgets/message_form/message_form.dart';
 
 class ChatRoomView extends StatelessWidget {
   const ChatRoomView({Key? key}) : super(key: key);
@@ -49,7 +49,7 @@ class ChatRoomView extends StatelessWidget {
                 child: MessageList(),
               ),
             ),
-            const MessageInput(),
+            const MessageForm(),
           ]),
         ),
       ),

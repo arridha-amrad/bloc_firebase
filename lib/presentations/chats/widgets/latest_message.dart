@@ -22,7 +22,14 @@ class LatestMessage extends StatelessWidget {
       stream: chatRepository.getMessage(chat.latestMessageId, chat.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                  )));
         }
         final message = snapshot.data;
         return Wrap(

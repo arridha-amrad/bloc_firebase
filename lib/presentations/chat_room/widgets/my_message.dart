@@ -10,9 +10,11 @@ class MyMessage extends StatelessWidget {
   const MyMessage({
     Key? key,
     required this.message,
+    required this.index,
   }) : super(key: key);
 
   final Message message;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
